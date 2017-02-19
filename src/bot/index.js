@@ -24,6 +24,7 @@ const defaultResponses = {
   invalidMessage: "Sorry, didn't understand that!",
   failure: "Sorry, something went wrong!",
   hereYouGo: "Here's a cool article",
+  music: "Found a dank tune",
   locationInstruction: {
     text: 'Please share your location.',
     quick_replies: [
@@ -70,9 +71,25 @@ const getResponsesForMessage = ({message, userKey}) => {
     if(message.text === 'hi') {
       resolve([defaultResponses.greetingMessage, defaultResponses.instructions]);
     } else if(message.text === 'random') {
-      // add something cool
-    } else if(responses.hasOwnProperty(message.text)) {
-      // add something cooler
+      wiki.getRandomWikiArticleLink()
+        .then(link => {
+          resolve([defaultResponses.hereYouGo, link]);
+        }).catch(() => {
+          resolve([defaultResponses.failure])
+        })
+    } 
+	else if(message.text === 'play') {
+      /* wiki.getSpotifyLink()
+        .then(link => {
+          resolve([defaultResponses.hereYouGo, link]);
+        }).catch(() => {
+          resolve([defaultResponses.failure])
+        }) */
+		
+		return 'https://api.spotify.com/v1/search?q=billie+jean';
+    }
+	else if(responses.hasOwnProperty(message.text)) {
+      resolve([responses[message.text]]);
     } else {
       resolve([defaultResponses.invalidMessage]);
     }
